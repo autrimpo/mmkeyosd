@@ -25,6 +25,7 @@ modtable[] = {
 	{"Control",       ControlMask},
 	{"Super",         Mod4Mask},
 	{"Alt",           Mod1Mask},
+	{"Shift",         ShiftMask},
 };
 
 /* some dynamic string macros */
