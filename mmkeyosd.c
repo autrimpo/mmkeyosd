@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -47,6 +48,7 @@ int barh;         /* bar height      */
 float opacity;    /* window opacity  */
 int wtimeout;     /* window time out in milliseconds */
 char *shell;
+bool silent;      /* silent mode */
 
 Display *dpy;
 Window win;
@@ -261,6 +263,16 @@ sigchld(int i) {
 }
 
 void
+sigusr1(int i) {
+	silent = true;
+}
+
+void
+sigusr2(int i) {
+	silent = false;
+}
+
+void
 setup() {
 	int i, j;
 	struct config *c;
@@ -279,6 +291,8 @@ setup() {
 
 	sw = DisplayWidth(dpy, screen);
 	sh = DisplayHeight(dpy, screen);
+
+	silent = false;
 
 	wattr.override_redirect = True;
 	wattr.background_pixel = bgcol.pixel; 
@@ -322,6 +336,8 @@ setup() {
 
 	signal(SIGALRM, sigalrm);
 	signal(SIGCHLD, sigchld);
+	signal(SIGUSR1, sigusr1);
+	signal(SIGUSR2, sigusr2);
 }
 
 void
@@ -449,7 +465,7 @@ run() {
 		if(!c)
 			continue;
 
-		if(!is_mapped) {
+		if(!is_mapped && !silent) {
 			updategeom();
 			moveresizeclear(ww, wh);
 			XMapRaised(dpy, win);
