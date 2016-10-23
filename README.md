@@ -13,7 +13,7 @@ Configuration
 Keys are configured in ~/.mmkeyosd/keys. The syntax is easy; each line 
 is a keybinding. First field specifies which keys to use. Syntax of key field is:
 
-	[Any of Super, Alt, Control+]Key
+	[Any of Super, Alt, Shift, Control+]Key
 	ControlAlt+m
 	AudioRaiseVolume
 
@@ -48,6 +48,14 @@ Possible settings are:
 
 Everything else, empty lines and lines starting with `#` are ignored.
 See keys.example and settings.example for more info.
+
+Silent mode
+-----------
+
+When in silent mode, mmkeyosd will react to input and execute the configured
+commands but won't show the OSD window.
+
+To activate silent mode send SIGUSR1, to stop it send SIGUSR2 to the process.
 
 Thanks to
 ---------
